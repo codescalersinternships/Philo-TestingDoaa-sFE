@@ -81,7 +81,7 @@ func DeleteTodo(w http.ResponseWriter, r *http.Request) {
 	DB.Delete(&new)
 	w.WriteHeader(http.StatusOK)
 
-	w.Write([]byte("200 - Task deleted"))
+	w.Write([]byte("200 - Task deleted successfuly"))
 }
 
 func main() {
