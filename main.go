@@ -6,12 +6,12 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	//"github.com/mattn/go-sqlite3"
 	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 const DBName = "todos.db"
@@ -87,6 +87,7 @@ func DeleteTodo(w http.ResponseWriter, r *http.Request) {
 func main() {
 	//initialMigration()
 	// create table if not exists
+	//DB.Create(&todos{Task:"someThing"})
 	if !(DB.Migrator().HasTable(&todos{})) {
 		log.Println("table { todos } created")
 		DB.Migrator().CreateTable(&todos{})
@@ -94,15 +95,14 @@ func main() {
 	if err != nil {
 		panic("can't connect to DB")
 	}
-	//DB.AutoMigrate()
-
-	//DB.AutoMigrate(&todos{})
 	router := mux.NewRouter()
-	router.HandleFunc("/gettodo", Gettodo).Methods("GET")
-	router.HandleFunc("/gettobyid/:{id}", Gettodobyid).Methods("GET")
-	router.HandleFunc("/createtodo", CreateTodo).Methods("POST")
-	router.HandleFunc("/updatetodo/:id", UpadateTodo).Methods("PUT")
-	router.HandleFunc("/deletetodo/:{taskId}", DeleteTodo).Methods("DELETE")
-	log.Fatal(http.ListenAndServe(":9000", router))
+	router.HandleFunc("/todo", Gettodo).Methods("GET")
+	router.HandleFunc("/todo/{id}", Gettodobyid).Methods("GET")
+	router.HandleFunc("/todo", CreateTodo).Methods("POST")
+	router.HandleFunc("/todo/{id}", UpadateTodo).Methods("PUT")
+	router.HandleFunc("/todo/{taskId}", DeleteTodo).Methods("DELETE")
 
+	router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
+
+	log.Fatal(http.ListenAndServe(":9000", router))
 }
