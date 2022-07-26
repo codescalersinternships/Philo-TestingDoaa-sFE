@@ -1,7 +1,6 @@
-module main
+module todo.go
 
 go 1.18
-
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
