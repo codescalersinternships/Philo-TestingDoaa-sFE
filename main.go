@@ -11,7 +11,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	//httpSwagger "github.com/swaggo/http-swagger"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 const DBName = "todos.db"
@@ -119,4 +119,18 @@ func (t *Server)Gettodobyid(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic("can't connect to DB")
 	}
+}
+func main() {
+	t := Server{}
+	t.InitializeDB()
+	router := mux.NewRouter()
+	router.HandleFunc("/todo", t.Gettodo).Methods("GET")
+	router.HandleFunc("/todo/{id}", t.Gettodobyid).Methods("GET")
+	router.HandleFunc("/todo", t.CreateTodo).Methods("POST")
+	router.HandleFunc("/todo/{id}", t.UpadateTodo).Methods("PUT")
+	router.HandleFunc("/todo/{taskId}", t.DeleteTodo).Methods("DELETE")
+
+	router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
+
+	log.Fatal(http.ListenAndServe(":9000", router))
 }
