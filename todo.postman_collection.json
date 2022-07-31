@@ -1,89 +1,45 @@
 {
 	"info": {
-		"_postman_id": "aa58b632-f619-415f-bd87-528b28208985",
-		"name": "todo",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "22310671"
+		"_postman_id": "2edb7e0c-7a0f-47cc-b9f2-0b074662551a",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "http://localhost:9000/todo/1",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": " {\r\n        \r\n         \"Task\": \"project20\"\r\n }",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:9000/todo/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"todo",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:9000/todo/1",
-			"request": {
-				"method": "GET",
-				"header": []
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:9000/todo",
-			"request": {
-				"method": "GET",
-				"header": []
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:9000/todo/1",
+			"name": "http://localhost:8080/todo",
 			"request": {
 				"method": "DELETE",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\":\"2\",\n    \"task\":\"Docker File\"\n}"
+				},
 				"url": {
-					"raw": "http://localhost:9000/todo/1",
+					"raw": "http://localhost:8080/todo/2",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "9000",
+					"port": "8080",
 					"path": [
 						"todo",
-						"1"
+						"2"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "http://localhost:9000/todo",
+			"name": "http://localhost:8080/todo",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"ID\": 20,\r\n    \"Task\": \"project20\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					"raw": "{\n    \"id\":\"2\",\n    \"task\":\"Docker File\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/todo",
@@ -91,9 +47,59 @@
 					"host": [
 						"localhost"
 					],
-					"port": "9000",
+					"port": "8080",
 					"path": [
 						"todo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/todo",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\":\"3\",\n    \"task\":\"FrontEnd\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/todo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/todo",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\":\"2\",\n    \"task\":\"Docker File\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/todo/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"todo",
+						"1"
 					]
 				}
 			},

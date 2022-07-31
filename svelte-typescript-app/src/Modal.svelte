@@ -1,110 +1,23 @@
-<!--
-<div clas ="backdrop">
-  <dir class="modal">
-      <div id="myDIV" class="header">
-          <h2>Update your task By ID</h2>
-          <input type="text" id="myInput" placeholder="Write your ID here">
-          <input type="text" id="myInput" placeholder="Write your New task here">
-          <button id="Button" type="button" on:click={UpadateTodo}> Add</button>
-        </div>
-        
-        <ul id="myUL">
-    
-          {#each lists as list }
-          <input type="checkbox" id="checkBox"> <li > {list.task}</li> <span id="span">❌</span>
-        
-          {/each}
-        </ul>
-  </dir>
-  <section>
-      <script>
-      </script>
-  </section>
-</div>
-<div clas ="backdrop">
-  <dir class="modal">
-      <div id="myDIV" class="header">
-          <h2>Get your task By ID </h2>
-          <input type="text" id="myInput" placeholder="Write your ID here">
-          <button id="Button" type="button" on:click={Gettodobyid}> Add</button>
-        </div>
-        
-        <ul id="myUL">
-    
-          {#each lists as list }
-          <input type="checkbox" id="checkBox"> <li > {list.task}</li> <span id="span">❌</span>
-        
-          {/each}
-        </ul>
-  </dir>
-  <section>
-      <script>
-      </script>
-  </section>
-</div>
-<div clas ="backdrop">
-  <dir class="modal">
-      <div id="myDIV" class="header">
-          <h2>Delete your task By ID</h2>
-          <input type="text" id="myInput" placeholder="Write your ID here">
-          <button id="Button" type="button" on:click={DeleteTodo}> Add</button>
-        </div>
-        
-        <ul id="myUL">
-    
-          {#each lists as list }
-          <input type="checkbox" id="checkBox"> <li > {list.task}</li> <span id="span">❌</span>
-        
-          {/each}
-        </ul>
-  </dir>
-  <section>
-      <script>
-      </script>
-  </section>
-</div>
-<div clas ="backdrop">
-  <dir class="modal">
-      <div id="myDIV" class="header">
-          <h2>Get your all tasks </h2>
-          <button id="Button" type="button" on:click={Gettodo}> Add</button>
-        </div>
-        
-        <ul id="myUL">
-    
-          {#each lists as list }
-          <input type="checkbox" id="checkBox"> <li > {list.task}</li> <span id="span">❌</span>
-        
-          {/each}
-        </ul>
-  </dir>
-  <section>
-      <script>
-      </script>
-  </section>
-</div>-->
-
-
 <script>
   import { onMount } from "svelte/internal";
   
   let todos = []
-  const baseURL = "http://localhost:9000/todo"
+  const baseURL = "http://localhost:8080/todo"
   
-  const Gettodo = async () => {
+  const getTodos = async () => {
     const response = await fetch(baseURL)
     const data = await response.json()
     todos = await data
   }
   
   onMount(() => {
-    Gettodo()
+    getTodos()
   })
   
   
   let Task
   let ID
-  const CreateTodo = async event => {
+  const createTodo = async event => {
     event.preventDefault() 
     await fetch(baseURL, {
       method: "post",
@@ -117,26 +30,35 @@
       }),
     })
   
-    Gettodo()
-    ID = 
+    getTodos()
+    ID = ""
     Task = ""
   }
   
-  const DeleteTodo = async (todo) => {
+  const deleteTodo = async (todo) => {
     event.preventDefault()
     await fetch(baseURL+"/"+todo.id,{
       method: "delete",
     })
-    Gettodo()
+    getTodos()
   }
+  
+  const markTask = async (todo) => {
+    event.preventDefault()
+    await fetch(baseURL + "/"+todo.id,{
+      method: "patch",
+    })
+    getTodos()
+  }
+  
   
   </script>
   
   <main>
     <h2>TODO APP</h2>
-    
-    <form on:submit="{CreateTodo}">
-      <input type="text" bind:value="{ID}" id=inputID>
+  
+    <form on:submit="{createTodo}">
+      <input type="text" bind:value="{ID}" id="inputID">
       <input type="text" bind:value="{Task}" id="inputTask">
       <input type="submit" value="Submit" />
     </form>
@@ -146,8 +68,9 @@
   
     {#each todos as todo}
     <div>
+      <input type="checkbox" onclick={(e) => markTask(todo)}>
       <h3>{todo.id} {todo.task}</h3>
-      <button class="btn" on:click={(e) => DeleteTodo(todo)}><i calss="fa fa-trash">❌</i></button>
+      <button class="btn" on:click={(e) => deleteTodo(todo)}><i calss="fa fa-trash">❌</i></button>
     </div>
     {/each}
   
@@ -158,7 +81,7 @@
   <style>
   
     input[type=text]{
-      margin: 20px 0;
+      margin: 8px 0;
       border-radius: 20px;
   
     }
@@ -166,38 +89,37 @@
     #inputID{
       width: 10%;
       box-sizing: border-box;
-      padding: 40px 30px;
-      border: 10px solid rgb(9, 6, 177);
+      padding: 20px 32px;
+      border: 5px solid rgb(39, 11, 117);
     }
   
     #inputTask{
       width: 50%;
       box-sizing: border-box;
-      padding: 50px 70px;
-      border: 4px solid rgb(93, 106, 218)
+      padding: 20px 32px;
+      border: 5px solid rgb(39, 11, 117);
     }
   
     input[type=submit]{
-      background-color: rgb(42, 54, 224);
+      background-color: rgb(39, 11, 117);
       border: none;
-      color: rgb(239, 243, 245);
-      font-size: 200%;
-      padding: 20px 20px;
+      color: rgb(244, 244, 248);
+      padding: 20px 32px;
       text-decoration: none;
-      margin: 5px 5px;
+      margin: 4px 4px;
       cursor: pointer;
-      border-radius: 1px;
+      border-radius: 25px;
     }
   
     h2{
-      color: rgb(29, 39, 173);
-      font-size: 40px;
+      color: rgb(4, 23, 133);
+      font-size: 50px;
       font-weight: 400;
       background-image: linear-gradient(to left, #fdfdff, #d1bce5);
     }
   
     .btn {
-    background-color: rgb(209, 141, 141); 
+    background-color: white; 
     border: none; 
     color: white; 
     padding: 12px 16px; 
@@ -214,10 +136,11 @@
   }
   
   h3{
-    font-weight: bold; 
-    color: rgb(23, 64, 80);
+    font-weight: bold;
+    color: rgb(17, 26, 153);
     padding-right: 33px;
-    font-style: italic;
+    font-style:oblique;
+    margin-left: 9px;
     
   }
   </style>
