@@ -31,16 +31,16 @@ type ErrorMsg struct {
 }
 
 func (app *App) GetAllTodos(c *gin.Context) {
-	lists , err:= model.GetAllTodosHandler()
-	if err!= nil{
+	lists, err := model.GetAllTodosHandler()
+	if err != nil {
 		r := ErrorMsg{"Error!!, Can't get all todos"}
 		c.JSON(http.StatusBadRequest, r)
 	}
 	c.JSON(http.StatusAccepted, &lists)
 }
 
-func(app *App) CreateTodo(c *gin.Context) {
-	list :=  &model.TodoList{}
+func (app *App) CreateTodo(c *gin.Context) {
+	list := &model.TodoList{}
 	if err := c.BindJSON(&list); err != nil {
 		r := ErrorMsg{"Error!!"}
 		c.JSON(http.StatusBadRequest, r)
@@ -53,7 +53,7 @@ func(app *App) CreateTodo(c *gin.Context) {
 func (app *App) DeleteTodo(c *gin.Context) {
 	id := c.Param("id")
 	deletedList, err := model.DeleteTodoHandler(id)
-	if err != nil{
+	if err != nil {
 		r := ErrorMsg{"Failed to delete"}
 		c.JSON(http.StatusInternalServerError, r)
 		return
@@ -61,28 +61,39 @@ func (app *App) DeleteTodo(c *gin.Context) {
 	c.JSON(http.StatusOK, deletedList)
 }
 
+func (app *App) UpdateTodo(c *gin.Context) {
+	id := c.Param("id")
+	_task := c.Param("task")
+
+	_, task, err := model.UpdateTodoHandler(id, _task, true)
+	if err != nil {
+		c.JSON(http.StatusNotFound, err)
+		return
+	}
+	c.JSON(http.StatusOK, task)
+}
+
 func (app *App) GetTodoByID(c *gin.Context) {
 	id := c.Param("id")
-	task , err := model.GetTodoByIDHandler(id)
-	if err != nil{
-		c.JSON(http.StatusNotFound, gin.H{ "Error ": "ID Not Found !!"})
-		return	
+	task, err := model.GetTodoByIDHandler(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"Error ": "ID Not Found !!"})
+		return
 	}
 	c.JSON(http.StatusAccepted, task)
 }
 
-func(app *App)MarkCompleted(c *gin.Context){
+func (app *App) MarkCompleted(c *gin.Context) {
 	var list model.TodoList
 	if err := app.db.Where("id= ?", c.Param("id")).First(&list).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"Error ": "ID Not Found !!"})
 		return
 	}
-	list.Done = true;
+	list.Done = true
 	c.JSON(http.StatusAccepted, list)
 
 }
-
 
 func main() {
 	router := gin.New()
@@ -121,7 +132,11 @@ func main() {
 	router.DELETE("/todo/:id", app.DeleteTodo)
 	router.Use(middleware.GinBodyMiddleware())
 	router.PATCH("/todo/:id", app.MarkCompleted)
+	router.Use(middleware.GinBodyMiddleware())
+	router.PUT("/todo/:id", app.UpdateTodo)
+
 	quit := make(chan os.Signal)
+
 	signal.Notify(quit, os.Interrupt)
 	<-quit
 	log.Println("Shutdown Server ...")

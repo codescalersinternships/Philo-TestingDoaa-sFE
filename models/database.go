@@ -1,6 +1,8 @@
 package model
 
 import (
+	"encoding/json"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -20,9 +22,9 @@ func ConnectDB() (*gorm.DB, error) {
 	return db, err
 }
 
-func GetAllTodosHandler()([]TodoList, error){
+func GetAllTodosHandler() ([]TodoList, error) {
 	db, err := ConnectDB()
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 	var allTodos []TodoList
@@ -30,29 +32,43 @@ func GetAllTodosHandler()([]TodoList, error){
 	return allTodos, errr
 }
 
-func (newTodo *TodoList)CreateTodoHandler()(*TodoList){
+func (newTodo *TodoList) CreateTodoHandler() *TodoList {
 	db, err := ConnectDB()
-	if err != nil{
+	if err != nil {
 		return nil
 	}
 	db.Create(&newTodo)
 	return newTodo
 }
+func UpdateTodoHandler(id string, _task string, status bool) ([]byte, TodoList, error) {
+	updatedTodo := TodoList{}
+	db, err := ConnectDB()
+	if err != nil {
 
-func DeleteTodoHandler(id string)(TodoList, error){
+		return nil, updatedTodo, err
+	}
+	errr := db.Where("ID=?", id).First(&updatedTodo).Error
+	if errr != nil {
+		return nil, updatedTodo, errr
+	}
+	data, err := json.Marshal(updatedTodo)
+    db.Save(&updatedTodo)
+	return data, updatedTodo, errr
+}
+func DeleteTodoHandler(id string) (TodoList, error) {
 	deletedTodo := TodoList{}
 	db, err := ConnectDB()
-	if err != nil{
+	if err != nil {
 		return deletedTodo, err
 	}
-	err2 := db.Where("ID = ?",id).Delete(&deletedTodo).Error
+	err2 := db.Where("ID = ?", id).Delete(&deletedTodo).Error
 	return deletedTodo, err2
 }
 
-func GetTodoByIDHandler(id string)(TodoList, error){
+func GetTodoByIDHandler(id string) (TodoList, error) {
 	getTask := TodoList{}
 	db, err := ConnectDB()
-	if err != nil{
+	if err != nil {
 		return getTask, err
 	}
 	errr := db.Where("ID=?", id).First(&getTask).Error
