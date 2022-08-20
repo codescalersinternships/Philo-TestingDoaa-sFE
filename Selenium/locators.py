@@ -8,7 +8,5 @@ class Locators():
     UPDATE_BTN = '//button[@type=\'update\']'
     GETID_BTN = '//button[@type=\'get\']'
     DELETE_FST = '/html[1]/body[1]/main[1]/main[1]/div[1]/div[4]/button[1]/i[1]'
-    #/html[1]/body[1]/main[1]/main[1]/div[1]/div[2]/button[1]/i[1]
-    #/html[1]/body[1]/main[1]/main[1]/div[1]/div[1]/button[1]/i[1]
     ID_BOX = "//input[@id='inputID']"
     CONTENT_BOX= "//input[@id='inputTask']"
